@@ -586,7 +586,85 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"h7u1C":[function(require,module,exports) {
 // Needed to run this command from the root folder (not src) to generate a runtime server http://localhost:1234
 // `npx parcel index.html` 
-console.log("hello");
+var _user = require("./models/User");
+const user = new (0, _user.User)({
+    name: "myName",
+    age: 20
+});
+user.on("change", ()=>{
+    console.log("change #1");
+});
+user.on("change", ()=>{
+    console.log("change #2");
+});
+user.on("save", ()=>{
+    console.log("save was triggered  ");
+});
+user.trigger("change");
+user.trigger("save");
+console.log(user);
+
+},{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "User", ()=>User);
+class User {
+    constructor(data){
+        this.data = data;
+        this.// the events shape is an object with key and array of Callbacks ex: events={'click',[cb,cb,cb,]}
+        events = {};
+    }
+    get(propName) {
+        return this.data[propName];
+    }
+    set(update) {
+        Object.assign(this.data, update);
+    }
+    // This is analogous to addEventListener('click', cb)
+    on(eventName, callback) {
+        // falling back to empty array if events is undefined which will happen initially
+        const handlers = this.events[eventName] || [];
+        handlers.push(callback);
+        this.events[eventName] = handlers;
+    }
+    trigger(eventName) {
+        const handlers = this.events[eventName] || [];
+        if (!handlers || handlers.length === 0) return;
+        handlers.forEach((callback)=>{
+            callback();
+        });
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"10dKd"}],"10dKd":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
 },{}]},["3BRyz","h7u1C"], "h7u1C", "parcelRequire94c2")
 
